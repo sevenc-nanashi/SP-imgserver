@@ -59,6 +59,7 @@ async def index():
                 },
             }
         ],
+        "repo": "https://github.com/sevenc-nanashi/SP-imgserver",
     }
 
 
