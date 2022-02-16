@@ -1,6 +1,6 @@
-# sp-imgserver
+# SP-imgserver
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/sevenc-nanashi/sp-imgserver)  
 SweetPotatoからカバー画像を取得して、画像を生成するサーバー。
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/sevenc-nanashi/sp-imgserver)
 
 ## 使い方
 
