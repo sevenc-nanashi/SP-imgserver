@@ -47,7 +47,7 @@ SUPPORTED_FORMATS = ["png", "jpg", "jpeg", "webp"]
 async def index():
     return {
         "message": "Hi there! This is a web service for generating a custom background image"
-        + " like PJSekai from SweetPotato level.\n"
+        + " like PJSekai from SweetPotato level.\n",
         "api": [
             {
                 "method": "POST",
