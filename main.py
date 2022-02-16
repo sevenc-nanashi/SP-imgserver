@@ -40,6 +40,7 @@ class Deformer:
 
 
 app = Quart(__name__)
+SUPPORTED_FORMATS = ["png", "jpg", "jpeg", "webp"]
 
 
 @app.post("/generate/<string:target>")
@@ -48,6 +49,11 @@ async def generate(target: str):
         target += ".png"
     name = target.split(".")[0]
     ext = target.split(".")[1]
+    if ext not in SUPPORTED_FORMATS:
+        return {
+            "message": "Unsupported format",
+            "supported": SUPPORTED_FORMATS,
+        }, 400
     if os.path.exists(f"dist/{name}-{get_asset_hash()}.{ext}"):
         print("Already exists, using cached version")
     elif os.path.exists(f"dist/{name}-{get_asset_hash()}.png"):
