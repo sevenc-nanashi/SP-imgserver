@@ -46,16 +46,19 @@ SUPPORTED_FORMATS = ["png", "jpg", "jpeg", "webp"]
 @app.get("/")
 async def index():
     return {
-        "message": "Hi there! This is a web service for generating a custom background image like PJSekai from SweetPotato.",
+        "message": "Hi there! This is a web service for generating a custom background image"
+        + " like PJSekai from SweetPotato level.\n"
         "api": [
             {
                 "method": "POST",
                 "path": "/generate/:target_level_id",
                 "params": {
-                    ":target_level_id": "The level ID of the image you want to generate. You can add extensions to this ID to get a different image format. Supported extensions are: " + ", ".join(SUPPORTED_FORMATS)
+                    ":target_level_id": "The level ID of the image you want to generate. "
+                    + "You can add extensions to this ID to get a different image format. Supported extensions are: "
+                    + ", ".join(SUPPORTED_FORMATS)
                 },
             }
-        ]
+        ],
     }
 
 
