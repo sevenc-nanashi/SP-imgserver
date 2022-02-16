@@ -85,6 +85,10 @@ async def generate(target: str):
         url = f"https://servers.purplepalette.net/repository/{base_name}/cover.png"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
+                if resp.status_code != 200:
+                    return {
+                        "message": "Failed to download cover image",
+                    }, 404
                 data = await resp.read()
                 jacket = Image.open(BytesIO(data))
         jacket.convert("RGBA")
