@@ -1,0 +1,8 @@
+{
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "name": "SP-imgserver"
+}
