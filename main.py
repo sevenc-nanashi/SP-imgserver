@@ -42,10 +42,18 @@ class Deformer:
 app = Quart(__name__)
 
 
-@app.post("/generate/<string:name>")
-async def generate(name: str):
-    if os.path.exists(f"dist/{name}-{get_asset_hash()}.png"):
+@app.post("/generate/<string:target>")
+async def generate(target: str):
+    if "." not in target:
+        target += ".png"
+    name = target.split(".")[0]
+    ext = target.split(".")[1]
+    if os.path.exists(f"dist/{name}-{get_asset_hash()}.{ext}"):
         print("Already exists, using cached version")
+    elif os.path.exists(f"dist/{name}-{get_asset_hash()}.png"):
+        print("Already exists, converting from png")
+        im = Image.open(f"dist/{name}-{get_asset_hash()}.png").convert("RGB")
+        im.save(f"dist/{name}-{get_asset_hash()}.{ext}")
     else:
         print("Generating...")
         base_name = name.removesuffix(".extra")
@@ -119,11 +127,13 @@ async def generate(name: str):
         # print(buffer.crop((0, diff, base.width, base.height - diff)).size, mask_img.size)
         res.paste(base.crop((0, diff, base.width, base.height - diff - 1)), (0, 0))
         res.paste(buffer.crop((0, diff, base.width, base.height - diff - 1)), (0, 0), mask=mask_img)
-
+        res = res.convert("RGB")
         res.save(f"dist/{name}-{get_asset_hash()}.png")
+        if ext != "png":
+            res.save(f"dist/{name}-{get_asset_hash()}.{ext}")
 
     return await send_file(
-        f"dist/{name}-{get_asset_hash()}.png",
+        f"dist/{name}-{get_asset_hash()}.{ext}",
     )
 
 

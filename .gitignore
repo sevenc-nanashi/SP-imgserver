@@ -15,7 +15,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-# dist/
+dist/
 downloads/
 eggs/
 .eggs/
@@ -158,4 +158,4 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-dist/*.png
+!dist/.gitkeep
