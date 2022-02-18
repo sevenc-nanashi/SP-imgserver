@@ -100,26 +100,22 @@ async def generate(target: str):
         base3.paste(
             alpha(
                 ImageOps.deform(
-                    jacket,
-                    deformer=Deformer(
-                        (0, 0, 0, jacket.height, jacket.width, jacket.height - shift * 2, jacket.width, -shift * 2)
-                    ),
-                ).resize((650, 650)),
+                    jacket.resize((703, 708)),
+                    deformer=Deformer((0, -18, -6, 720, 704, 719, 704, 2)),
+                ),
                 0.8,
             ),
-            (461, 135),
+            (449, 98),
         )
         base3.paste(
             alpha(
                 ImageOps.deform(
-                    jacket,
-                    deformer=Deformer(
-                        (0, 0, 0, jacket.height, jacket.width, jacket.height - shift * 2, jacket.width, -shift * 2)
-                    ),
-                ).resize((700, 700)),
+                    jacket.resize((618, 706)),
+                    deformer=Deformer((1, -43, -5, 707, 621, 721, 616, 2)),
+                ),
                 0.8,
             ),
-            (939, 80),
+            (1019, 48),
         )
         shift = 10
         base2.paste(
@@ -139,7 +135,7 @@ async def generate(target: str):
                 ImageOps.deform(
                     jacket,
                     deformer=Deformer(
-                        (0, jacket.height, -shift, 0, jacket.width + shift, 0, jacket.width, jacket.height)
+                        (0, jacket.height, 0, 0, jacket.width, 0, jacket.width, jacket.height)
                     ),
                 ).resize((450, 450)),
                 0.7,
