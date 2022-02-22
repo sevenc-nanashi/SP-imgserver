@@ -58,7 +58,7 @@ async def generate_swpt(target: str):
         print("Generating...")
         base_name = name.removesuffix(".extra")
         if name.startswith("l_"):
-            url = f"https://PurplePalette.github.io/sonolus/levels/#{name[2:].replace(' ', '%20')}"
+            url = f"https://PurplePalette.github.io/sonolus/repository/levels/{name[2:].replace(' ', '%20')}/jacket.jpg"
         else:
             url = f"https://servers.purplepalette.net/repository/{base_name}/cover.png"
         async with aiohttp.ClientSession() as session:
