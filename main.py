@@ -40,6 +40,14 @@ async def generate_swpt(target: str):
     name = target.split(".")[0]
     ext = target.split(".")[1]
     uniq = name
+    if not name.startswith("l_"):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://servers.purplepalette.net/levels/{name}") as resp:
+                if resp.status == 404:
+                    return {
+                        "error": f"Level {name} not found. Please check the level ID and try again."
+                    }, 404
+                uniq = (await resp.json())["item"]["cover"]["hash"]
     extra = request.args.get("extra") == "true"
     if extra:
         uniq += "-extra"
