@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 
 # -- Startup ------------------------------------------------------------------
 COPY . .
-CMD ["python", "main.py"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
