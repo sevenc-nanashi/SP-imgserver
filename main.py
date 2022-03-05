@@ -38,16 +38,20 @@ async def generate_swpt(target: str):
     if "." not in target:
         target += ".png"
     name = target.split(".")[0]
-    ext = target.split(".")[1]
+    ext = target.split(".")[-1]
     uniq = name
     if not name.startswith("l_"):
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://servers.purplepalette.net/levels/{name}") as resp:
-                if resp.status == 404:
-                    return {
-                        "error": f"Level {name} not found. Please check the level ID and try again."
-                    }, 404
-                uniq = (await resp.json())["item"]["cover"]["hash"]
+            if target.startswith("official-"):
+                official_name = name.split("-")[2].split(".")[0]
+                uniq = "official-" + official_name
+            else:
+                async with session.get(f"https://servers.purplepalette.net/levels/{name}") as resp:
+                    if resp.status == 404:
+                        return {
+                            "error": f"Level {name} not found. Please check the level ID and try again."
+                        }, 404
+                    uniq = (await resp.json())["item"]["cover"]["hash"]
     extra = request.args.get("extra") == "true"
     if extra:
         uniq += "-extra"
@@ -67,6 +71,8 @@ async def generate_swpt(target: str):
         base_name = name.removesuffix(".extra")
         if name.startswith("l_"):
             url = f"https://PurplePalette.github.io/sonolus/repository/levels/{name[2:].replace(' ', '%20')}/jacket.jpg"
+        elif name.startswith("official-"):
+            url = f"https://sekai-res.dnaroma.eu/file/sekai-assets/music/jacket/jacket_s_{official_name}_rip/jacket_s_{official_name}.png"
         else:
             url = f"https://servers.purplepalette.net/repository/{base_name}/cover.png"
         async with aiohttp.ClientSession() as session:
