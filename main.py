@@ -72,7 +72,7 @@ async def generate_swpt(target: str):
         if name.startswith("l_"):
             url = f"https://PurplePalette.github.io/sonolus/repository/levels/{name[2:].replace(' ', '%20')}/jacket.jpg"
         elif name.startswith("official-"):
-            url = f"https://sekai-res.dnaroma.eu/file/sekai-assets/music/jacket/jacket_s_{official_name:03}_rip/jacket_s_{official_name:03}.png"
+            url = f"https://sekai-res.dnaroma.eu/file/sekai-assets/music/jacket/jacket_s_{official_name:0>3}_rip/jacket_s_{official_name:0>3}.png"
         else:
             url = f"https://servers.purplepalette.net/repository/{base_name}/cover.png"
         async with aiohttp.ClientSession() as session:
