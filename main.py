@@ -1,5 +1,6 @@
 import asyncio
 from hashlib import sha256
+import io
 import os
 from PIL import Image
 from io import BytesIO
@@ -100,7 +101,11 @@ async def generate_swpt(target: str):
 
 @app.route("/generate", methods=["POST"])
 async def generate():
-    if 'file' not in await request.files:
+    if (post_file := (await request.files).get("file")):
+        file = post_file.file
+    elif await request.data:
+        file = io.BytesIO(await request.data)
+    else:
         return {
             "message": "No file were uploaded"
         }, 400
@@ -110,7 +115,6 @@ async def generate():
             "message": "Unsupported format",
             "supported": SUPPORTED_FORMATS,
         }, 400
-    file = (await request.files)['file']
     extra = request.args.get("extra") == "true"
     uniq = sha256(file.read()).hexdigest()
     if extra:
@@ -124,7 +128,7 @@ async def generate():
         im.save(f"dist/{uniq}.{ext}")
     else:
         print("Generating...")
-        jacket = Image.open(file.stream)
+        jacket = Image.open(file)
         loop = asyncio.get_event_loop()
         if extra:
             gen = extra_generator
