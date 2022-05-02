@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 # -- Startup ------------------------------------------------------------------
 COPY . .
 EXPOSE 80
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:80", "main:app"]
+CMD ["/bin/sh", "-c", "gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:${PORT:-80} main:app"]
