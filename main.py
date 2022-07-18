@@ -78,7 +78,7 @@ async def generate_swpt(target: str):
             url = f"https://PurplePalette.github.io/sonolus/repository/levels/{name[2:].replace(' ', '%20')}/jacket.jpg"
         elif name.startswith("official-"):
             url = (
-                f"https://minio.dnaroma.eu/sekai-assets/music/jacket/jacket_s_{official_name:0>3}_rip/"
+                f"https://storage.sekai.best/sekai-assets/music/jacket/jacket_s_{official_name:0>3}_rip/"
                 f"jacket_s_{official_name:0>3}.png"
             )
         else:
