@@ -1,7 +1,8 @@
 import asyncio
 from hashlib import sha256
+import io
 import os
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 import aiohttp
 from quart import Quart, request, send_file
@@ -10,7 +11,9 @@ import pjsekai_background_gen_pillow as pjbg
 app = Quart(__name__)
 SUPPORTED_FORMATS = ["png", "jpg", "jpeg", "webp"]
 generator: pjbg.Generator = pjbg.Generator()
-extra_generator: pjbg.Generator = pjbg.Generator(Image.open("./background-base-extra.png"))
+extra_generator: pjbg.Generator = pjbg.Generator(
+    Image.open("./background-base-extra.png")
+)
 
 
 @app.get("/")
@@ -46,7 +49,9 @@ async def generate_swpt(target: str):
                 official_name = name.split("-")[2].split(".")[0]
                 uniq = "official-" + official_name
             else:
-                async with session.get(f"https://servers.purplepalette.net/levels/{name}") as resp:
+                async with session.get(
+                    f"https://servers.purplepalette.net/levels/{name}"
+                ) as resp:
                     if resp.status == 404:
                         return {
                             "error": f"Level {name} not found. Please check the level ID and try again."
@@ -72,7 +77,10 @@ async def generate_swpt(target: str):
         if name.startswith("l_"):
             url = f"https://PurplePalette.github.io/sonolus/repository/levels/{name[2:].replace(' ', '%20')}/jacket.jpg"
         elif name.startswith("official-"):
-            url = f"https://sekai-res.dnaroma.eu/file/sekai-assets/music/jacket/jacket_s_{official_name}_rip/jacket_s_{official_name}.png"
+            url = (
+                f"https://storage.sekai.best/sekai-assets/music/jacket/jacket_s_{official_name:0>3}_rip/"
+                f"jacket_s_{official_name:0>3}.png"
+            )
         else:
             url = f"https://servers.purplepalette.net/repository/{base_name}/cover.png"
         async with aiohttp.ClientSession() as session:
@@ -100,17 +108,19 @@ async def generate_swpt(target: str):
 
 @app.route("/generate", methods=["POST"])
 async def generate():
-    if 'file' not in await request.files:
-        return {
-            "message": "No file were uploaded"
-        }, 400
+    if post_file := (await request.files).get("file"):
+        file = post_file.file
+    elif await request.data:
+        file = io.BytesIO(await request.data)
+        file.seek(0)
+    else:
+        return {"message": "No file were uploaded"}, 400
     ext = request.args.get("ext", "png")
     if ext not in SUPPORTED_FORMATS:
         return {
             "message": "Unsupported format",
             "supported": SUPPORTED_FORMATS,
         }, 400
-    file = (await request.files)['file']
     extra = request.args.get("extra") == "true"
     uniq = sha256(file.read()).hexdigest()
     if extra:
@@ -124,7 +134,10 @@ async def generate():
         im.save(f"dist/{uniq}.{ext}")
     else:
         print("Generating...")
-        jacket = Image.open(file.stream)
+        try:
+            jacket = Image.open(file)
+        except UnidentifiedImageError:
+            return {"message": "Couldn't read image file."}, 400
         loop = asyncio.get_event_loop()
         if extra:
             gen = extra_generator
