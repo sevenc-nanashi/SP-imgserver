@@ -50,7 +50,7 @@ async def generate_swpt(target: str):
                 uniq = "official-" + official_name
             else:
                 async with session.get(
-                    f"https://servers.purplepalette.net/levels/{name}"
+                    f"https://servers.purplepalette.net/sonolus/levels/{name}"
                 ) as resp:
                     if resp.status == 404:
                         return {
